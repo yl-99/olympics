@@ -45,7 +45,15 @@ app.get('/api/coaches/:name', (req, res)=>{
 
 app.get('/api/countries', (req, res)=>{
     const sqlSelect = 
-    "SELECT country, (gold + silver + bronze) AS 'Total' FROM team JOIN competesIn ON team.TID = competesIn.TID"
+    "SELECT country, SUM(Total) AS 'medalSum' FROM (SELECT country, (gold + silver + bronze) AS Total FROM team JOIN competesIn ON team.TID = competesIn.TID) AS t GROUP BY country"
+    db.query(sqlSelect, (err, result)=>{
+        res.send(result)
+    })
+})
+
+app.get('/api/countries/teams', (req, res)=>{
+    const sqlSelect = 
+    "SELECT Tname, country FROM team"
     db.query(sqlSelect, (err, result)=>{
         res.send(result)
     })
@@ -54,7 +62,7 @@ app.get('/api/countries', (req, res)=>{
 app.get('/api/countries/:countryName', (req, res)=>{
     const Cname = req.params.countryName
     const sqlSelect = 
-    "SELECT country, (gold + silver + bronze) AS 'Total' FROM team JOIN competesIn ON team.TID = competesIn.TID WHERE country = ?"
+    "SELECT country, SUM(Total) AS 'medalSum' FROM (SELECT country, (gold + silver + bronze) AS Total FROM team JOIN competesIn ON team.TID = competesIn.TID) AS t WHERE country = ?"
     db.query(sqlSelect, Cname, (err, result)=>{
         res.send(result)
     })
