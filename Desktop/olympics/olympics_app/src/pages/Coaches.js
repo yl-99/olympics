@@ -4,33 +4,13 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import coach1 from '../images/coach1.jpeg'
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Grid from '@mui/material/Grid';
-import { maxHeight, textAlign } from "@mui/system";
 import Divider from '@mui/material/Divider';
-import Pagination from '@mui/material/Pagination';
+import Pagination from "../components/Pagination";
 
 
 
@@ -57,41 +37,43 @@ function Coaches(props) {
         }
     }, [props.userSearch])
 
+    const [currentPage, setCurrentPage] = useState(1)
+    const [rowsPerPage] = useState(10)
+    
+    const indexOfLastRow = currentPage * rowsPerPage
+    const indexOfFirstRow = indexOfLastRow - rowsPerPage
+    const currentRow = coachInfo.slice(indexOfFirstRow, indexOfLastRow)
+
+    const paginate = (pageNum) => setCurrentPage(pageNum)
+
     if (coachInfo.length === 0) {
         return (
             <h2>NO DATA FOUND</h2>
         )
     }
 
-    const Item = styled(Paper)(({ theme }) => ({
-        ...theme.typography.body2,
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    }));
-
 
     return (
         <div>
             <Stack
                 direction="column"
-                justifyContent="flex-start"
-                alignItems="stretch"
                 divider={<Divider orientation="horizontal" flexItem />}
                 spacing={2}
                 boxShadow="none"
                 marginTop="50px"
                 marginBottom="50px"
+                marginLeft="75px"
+                marginRight="200px"
                 
             >
-                {coachInfo.map((val) => {
+                {currentRow.map((val) => {
 
                     const buffer = val.Photo.data
                     const b64 = new Buffer.from(buffer).toString('base64')
                     const mimeType = "png"
 
                     return (
-                        <Card sx={{ maxWidth: 500, maxHeight: 500 }} key={`${val.CID}`}>
+                        <Card sx={{ maxWidth: 500, maxHeight: 500}} key={`${val.CID}`}>
                             <Box sx={{ display: 'inline-block' }}>
                                 <CardMedia
                                     component="img"
@@ -125,7 +107,7 @@ function Coaches(props) {
                     )
                 })}
             </Stack>
-            <Pagination count={10} variant="outlined" color="primary" />
+            <Pagination rowsPerPage={rowsPerPage} totalRows={coachInfo.length} paginate={paginate}/>
         </div>
     )
 }

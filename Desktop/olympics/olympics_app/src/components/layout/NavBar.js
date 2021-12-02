@@ -20,6 +20,7 @@ import Teams from '../../pages/Teams'
 import Dates from '../../pages/Dates'
 
 
+
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -98,8 +99,8 @@ function NavBar() {
     };
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
+        <div>
+            <AppBar position="static" sx={{marginBottom:"30px"}}>
                 <Toolbar>
                     <IconButton
                         size="large"
@@ -166,8 +167,8 @@ function NavBar() {
                 <Route path='/teams' element={<Teams userSearch={`${searchIteam}`} />} />
                 <Route path='/dates' element={<Dates userSearch={`${searchIteam}`} />} />
             </Routes>
-        </Box>
-
+        
+            </div>
     );
 }
 

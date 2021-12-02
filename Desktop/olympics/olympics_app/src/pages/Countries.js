@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from "react"
 import Axios from "axios"
-import ListSubheader from '@mui/material/ListSubheader';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import SendIcon from '@mui/icons-material/Send';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import StarBorder from '@mui/icons-material/StarBorder';
-import Pagination from '@mui/material/Pagination';
-import Divider from '@mui/material/Divider';
+import Pagination from "../components/Pagination";
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import EmojiEventsTwoToneIcon from '@mui/icons-material/EmojiEventsTwoTone';
+import FlagTwoToneIcon from '@mui/icons-material/FlagTwoTone';
+import GroupsTwoToneIcon from '@mui/icons-material/GroupsTwoTone';
 
 function Countries(props) {
     const [countryInfo, setCountryInfo] = useState([])
@@ -45,11 +40,14 @@ function Countries(props) {
 
 
 
-    const [open, setOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1)
+    const [rowsPerPage] = useState(10)
+    
+    const indexOfLastRow = currentPage * rowsPerPage
+    const indexOfFirstRow = indexOfLastRow - rowsPerPage
+    const currentRow = countryInfo.slice(indexOfFirstRow, indexOfLastRow)
 
-    const handleClick = () => {
-        setOpen(!open);
-    };
+    const paginate = (pageNum) => setCurrentPage(pageNum)
 
     if (countryInfo.length === 0 || countryInfo[0].country === null) {
         return (
@@ -59,10 +57,7 @@ function Countries(props) {
 
     return (
         <div>
-
-            {countryInfo.map((country) => {
-
-
+            {currentRow.map((country) => {
                 var teams = []
                 {
                     teamInfo.map((team) => {
@@ -75,25 +70,26 @@ function Countries(props) {
                     })
                 }
                 return (
-                    <List
-                        sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' , marginTop:"50px", marginBottom:"50px"}}
-                        component="nav"
-                        >
-                        <ListItemButton onClick={handleClick}>
-                            <ListItemText primary={`${country.country} ${country.medalSum}`} />
-                            {open ? <ExpandLess /> : <ExpandMore />}
-                        </ListItemButton>
-                        <Collapse in={open} timeout="auto" unmountOnExit>
-                            <List component="div" disablePadding>
-                                <ListItemButton sx={{ pl: 4 }}>
-                                    <ListItemText primary={`${teams}`} />
-                                </ListItemButton>
-                            </List>
-                        </Collapse>
-                    </List>
+                    <Accordion sx={{marginTop:"20px", marginBottom:"20px"}}>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      id={country.country}
+                    >
+                      <Typography> <FlagTwoToneIcon/> {country.country} | <EmojiEventsTwoToneIcon/> {country.medalSum} | <GroupsTwoToneIcon/> {teams.length}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Typography>
+                        {teams.map((team) =>{
+                            return(
+                                <p>{team}</p>
+                            )
+                        })} 
+                      </Typography>
+                    </AccordionDetails>
+                  </Accordion>
                 )
             })}
-            <Pagination count={10} variant="outlined" color="primary" />
+            <Pagination rowsPerPage={rowsPerPage} totalRows={countryInfo.length} paginate={paginate}/>
         </div>
     )
 }

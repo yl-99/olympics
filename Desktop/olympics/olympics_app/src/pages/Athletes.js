@@ -1,48 +1,27 @@
-import React, {useEffect, useState} from "react"
+import React, { useEffect, useState } from "react"
 import Axios from "axios"
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import coach1 from '../images/coach1.jpeg'
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Grid from '@mui/material/Grid';
-import { maxHeight, textAlign } from "@mui/system";
 import Divider from '@mui/material/Divider';
-import Pagination from '@mui/material/Pagination';
+import Pagination from "../components/Pagination";
 
-function Athletes(props)
-{
+
+
+function Athletes(props) {
 
     const [athleteInfo, setAthleteInfo] = useState([])
 
     //response.data holds selected database info
-    useEffect(()=>{
-        Axios.get('http://localhost:3001/api/athletes').then((response)=>{
-        console.log("res", response.data)
-        setAthleteInfo(response.data)
-    })
+    useEffect(() => {
+        Axios.get('http://localhost:3001/api/athletes').then((response) => {
+            console.log("res", response.data)
+            setAthleteInfo(response.data)
+        })
     }, [])
 
     useEffect(() => {
@@ -54,12 +33,21 @@ function Athletes(props)
         }
     }, [props.userSearch])
 
+    const [currentPage, setCurrentPage] = useState(1)
+    const [rowsPerPage] = useState(10)
+
+    const indexOfLastRow = currentPage * rowsPerPage
+    const indexOfFirstRow = indexOfLastRow - rowsPerPage
+    const currentRow = athleteInfo.slice(indexOfFirstRow, indexOfLastRow)
+
+    const paginate = (pageNum) => setCurrentPage(pageNum)
+
     if (athleteInfo.length === 0) {
         return (
             <h2>NO DATA FOUND</h2>
         )
     }
- 
+
     return (
         <div>
             <Stack
@@ -71,9 +59,11 @@ function Athletes(props)
                 boxShadow="none"
                 marginTop="50px"
                 marginBottom="50px"
-                
+                marginLeft="75px"
+                marginRight="200px"
+
             >
-                {athleteInfo.map((athlete) => {
+                {currentRow.map((athlete) => {
 
                     const buffer = athlete.Photo.data
                     const b64 = new Buffer.from(buffer).toString('base64')
@@ -114,10 +104,9 @@ function Athletes(props)
                     )
                 })}
             </Stack>
-            <Pagination count={10} variant="outlined" color="primary" />
+            <Pagination rowsPerPage={rowsPerPage} totalRows={athleteInfo.length} paginate={paginate}/>
         </div>
     )
 }
 
 export default Athletes
- 

@@ -1,18 +1,14 @@
 import React, {useEffect, useState} from "react"
 import Axios from "axios"
-import ListSubheader from '@mui/material/ListSubheader';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import SendIcon from '@mui/icons-material/Send';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import StarBorder from '@mui/icons-material/StarBorder';
-import Pagination from '@mui/material/Pagination';
+import Pagination from "../components/Pagination";
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import EmojiEventsTwoToneIcon from '@mui/icons-material/EmojiEventsTwoTone';
+import FlagTwoToneIcon from '@mui/icons-material/FlagTwoTone';
+import GroupsTwoToneIcon from '@mui/icons-material/GroupsTwoTone';
 
 function Teams(props)
 {
@@ -42,6 +38,15 @@ function Teams(props)
         setOpen(!open);
     };
 
+    const [currentPage, setCurrentPage] = useState(1)
+    const [rowsPerPage] = useState(10)
+
+    const indexOfLastRow = currentPage * rowsPerPage
+    const indexOfFirstRow = indexOfLastRow - rowsPerPage
+    const currentRow = teamInfo.slice(indexOfFirstRow, indexOfLastRow)
+
+    const paginate = (pageNum) => setCurrentPage(pageNum)
+
     if (teamInfo.length === 0) {
         return (
             <h2>NO DATA FOUND</h2>
@@ -51,26 +56,24 @@ function Teams(props)
     return (
         <div>
 
-            {teamInfo.map((team) => {
+            {currentRow.map((team) => {
                 return (
-                    <List 
-                        sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', marginTop:"50px", marginBottom:"50px" }}
-                        component="nav">
-                        <ListItemButton  onClick={handleClick}>
-                            <ListItemText primary={`${team.Tname}`}/>
-                            {open ? <ExpandLess /> : <ExpandMore />}
-                        </ListItemButton>
-                        <Collapse in={open} timeout="auto" unmountOnExit>
-                            <List component="div" disablePadding>
-                                <ListItemButton sx={{ pl: 4 }}>
-                                    <ListItemText primary={`Gold: ${team.gold} Silver: ${team.silver} Bronze: ${team.bronze}`}  />
-                                </ListItemButton>
-                            </List>
-                        </Collapse>
-                    </List>
+                    <Accordion sx={{marginTop:"20px", marginBottom:"20px"}}>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      id={team.Tname}
+                    >
+                      <Typography> <GroupsTwoToneIcon/> {team.Tname} | <EmojiEventsTwoToneIcon/> {team.gold+team.silver+team.bronze}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Typography>
+                        <p>Gold: {team.gold}</p><p>Silver: {team.silver}</p><p>Bronze: {team.bronze}</p>
+                      </Typography>
+                    </AccordionDetails>
+                  </Accordion>
                 )
             })}
-            <Pagination count={10} variant="outlined" color="primary" />
+            <Pagination rowsPerPage={rowsPerPage} totalRows={teamInfo.length} paginate={paginate}/>
         </div>
     )
 }
