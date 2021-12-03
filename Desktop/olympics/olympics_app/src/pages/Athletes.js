@@ -9,8 +9,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Pagination from "../components/Pagination";
-
-
+import pic from "../pics/blankpic.png"
 
 function Athletes(props) {
 
@@ -65,18 +64,32 @@ function Athletes(props) {
             >
                 {currentRow.map((athlete) => {
 
+                    let b64, mimeType, defualtPic = true
+
+                    if(athlete.Photo.data.length > 10){
                     const buffer = athlete.Photo.data
-                    const b64 = new Buffer.from(buffer).toString('base64')
-                    const mimeType = "png"
+                     b64 = new Buffer.from(buffer).toString('base64')
+                     mimeType = "png"
+                     defualtPic = false
+                    }
 
                     return (
-                        <Card sx={{ maxWidth: 500, maxHeight: 500 }} key={`${athlete.AID}`}>
-                            <Box sx={{ display: 'inline-block' }}>
-                                <CardMedia
+                        <Card sx={{ maxWidth: 500, maxHeight: 500}} key={`${athlete.AID}`}>
+                            <Box sx={{ display: 'inline-block', marginTop:"15px" }}>
+                                { defualtPic == false &&
+                                <CardMedia 
                                     component="img"
                                     height="200"
                                     src={`data:${mimeType};base64,${b64}`}
                                 />
+                                }
+                                { defualtPic &&
+                                <CardMedia 
+                                    component="img"
+                                    height="200"
+                                    src={pic}
+                                />
+                                }
                             </Box>
                             <Box sx={{ display: 'inline-block' }}>
                                 <List dense="true">

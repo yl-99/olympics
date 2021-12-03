@@ -11,7 +11,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Pagination from "../components/Pagination";
-
+import pic from "../pics/blankpic.png"
 
 
 
@@ -39,7 +39,7 @@ function Coaches(props) {
 
     const [currentPage, setCurrentPage] = useState(1)
     const [rowsPerPage] = useState(10)
-    
+
     const indexOfLastRow = currentPage * rowsPerPage
     const indexOfFirstRow = indexOfLastRow - rowsPerPage
     const currentRow = coachInfo.slice(indexOfFirstRow, indexOfLastRow)
@@ -64,41 +64,55 @@ function Coaches(props) {
                 marginBottom="50px"
                 marginLeft="75px"
                 marginRight="200px"
-                
-            >
-                {currentRow.map((val) => {
 
-                    const buffer = val.Photo.data
-                    const b64 = new Buffer.from(buffer).toString('base64')
-                    const mimeType = "png"
+            >
+                {currentRow.map((coach) => {
+
+                    let b64, mimeType, defualtPic = true
+
+                    if (coach.Photo.data.length > 10) {
+                        const buffer = coach.Photo.data
+                        b64 = new Buffer.from(buffer).toString('base64')
+                        mimeType = "png"
+                        defualtPic = false
+                    }
 
                     return (
-                        <Card sx={{ maxWidth: 500, maxHeight: 500}} key={`${val.CID}`}>
-                            <Box sx={{ display: 'inline-block' }}>
-                                <CardMedia
-                                    component="img"
-                                    height="200"
-                                    src={`data:${mimeType};base64,${b64}`}
-                                />
+                        <Card sx={{ maxWidth: 500, maxHeight: 500 }} key={`${coach.CID}`}>
+                            <Box sx={{ display: 'inline-block', marginTop: "15px" }}>
+                                {defualtPic == false &&
+                                    <CardMedia
+                                        component="img"
+                                        height="200"
+                                        src={`data:${mimeType};base64,${b64}`}
+                                    />
+                                }
+                                {defualtPic &&
+                                    <CardMedia
+                                        component="img"
+                                        height="200"
+                                        src={pic}
+                                    />
+                                }
                             </Box>
                             <Box sx={{ display: 'inline-block' }}>
                                 <List dense="true">
                                     <ListItem sx={{ display: 'block' }}>
                                         <ListItemText
                                             primary="Full Name"
-                                            secondary={val.Name}
+                                            secondary={coach.Name}
                                         />
                                         <ListItemText
                                             primary="Gender"
-                                            secondary={val.Gender}
+                                            secondary={coach.Gender}
                                         />
                                         <ListItemText
                                             primary="Age"
-                                            secondary={val.Age}
+                                            secondary={coach.Age}
                                         />
                                         <ListItemText
                                             primary="Country"
-                                            secondary={val.Team}
+                                            secondary={coach.Team}
                                         />
                                     </ListItem>
                                 </List>
@@ -107,7 +121,7 @@ function Coaches(props) {
                     )
                 })}
             </Stack>
-            <Pagination rowsPerPage={rowsPerPage} totalRows={coachInfo.length} paginate={paginate}/>
+            <Pagination rowsPerPage={rowsPerPage} totalRows={coachInfo.length} paginate={paginate} />
         </div>
     )
 }
