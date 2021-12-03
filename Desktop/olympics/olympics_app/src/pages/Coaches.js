@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react"
 import Axios from "axios"
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Box from '@mui/material/Box';
@@ -70,12 +68,12 @@ function Coaches(props) {
 
                     let b64, mimeType, defualtPic = true
 
-                    if (coach.Photo.data.length > 10) {
-                        const buffer = coach.Photo.data
-                        b64 = new Buffer.from(buffer).toString('base64')
-                        mimeType = "png"
-                        defualtPic = false
-                    }
+                    // if (coach.Photo.data.length > 10) {
+                    //     const buffer = coach.Photo.data
+                    //     b64 = new Buffer.from(buffer).toString('base64')
+                    //     mimeType = "png"
+                    //     defualtPic = false
+                    // }
 
                     return (
                         <Card sx={{ maxWidth: 500, maxHeight: 500 }} key={`${coach.CID}`}>
