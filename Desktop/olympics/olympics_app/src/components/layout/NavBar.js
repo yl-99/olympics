@@ -65,6 +65,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function NavBar() {
     const location = useLocation();
     const locationName = location.pathname.substr(1).toUpperCase()
+    let homePage = false
+    if (locationName == "HOME") {
+        homePage = true
+    }
 
     const [filter, setFilter] = useState('')
     const handleSearchChange = (event) => {
@@ -93,14 +97,16 @@ function NavBar() {
     };
     const handleClose = (event) => {
         setAnchorEl(null);
-        setFilter("")
-        setSearchItem("")
-        document.getElementById("searchBar").value = ""
+        if (!homePage) {
+            setFilter("")
+            setSearchItem("")
+            document.getElementById("searchBar").value = ""
+        }
     };
 
     return (
         <div>
-            <AppBar position="static" sx={{marginBottom:"30px"}}>
+            <AppBar position="static" sx={{ marginBottom: "30px" }}>
                 <Toolbar>
                     <IconButton
                         size="large"
@@ -138,24 +144,28 @@ function NavBar() {
                     >
                         {`${locationName}`}
                     </Typography>
-                    <Search>
+                    {!homePage &&
+                        <Search>
 
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            sx={{ mr: 2 }}
-                            onClick={handleSearchClick}>
-                            <SearchIcon />
-                        </IconButton>
+                            <IconButton
+                                edge="start"
+                                color="inherit"
+                                sx={{ mr: 2 }}
+                                onClick={handleSearchClick}>
+                                <SearchIcon />
+                            </IconButton>
 
-                        <StyledInputBase
-                            placeholder={`Search ${locationName}..`}
-                            inputProps={{ 'aria-label': 'search' }}
-                            id="searchBar"
-                            onChange={handleSearchChange}
-                            onKeyDown={handleSearchEnter}
-                        />
-                    </Search>
+
+                            <StyledInputBase
+                                placeholder={`Search ${locationName}..`}
+                                inputProps={{ 'aria-label': 'search' }}
+                                id="searchBar"
+                                onChange={handleSearchChange}
+                                onKeyDown={handleSearchEnter}
+                            />
+
+                        </Search>
+                    }
                 </Toolbar>
             </AppBar>
             <Routes>
@@ -167,8 +177,8 @@ function NavBar() {
                 <Route path='/teams' element={<Teams userSearch={`${searchIteam}`} />} />
                 <Route path='/dates' element={<Dates userSearch={`${searchIteam}`} />} />
             </Routes>
-        
-            </div>
+
+        </div>
     );
 }
 

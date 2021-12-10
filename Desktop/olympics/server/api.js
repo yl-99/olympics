@@ -87,7 +87,7 @@ app.get('/api/teams/:teamName', (req, res)=>{
 
 app.get('/api/dates', (req, res)=>{
     const sqlSelect = 
-    "SELECT Date.DayNum, Day, Month, YEAR, vName, Ename FROM Date JOIN heldOn ON Date.DayNum = heldOn.DayNum JOIN event ON heldOn.EID = event.EID JOIN heldAt ON heldOn.EID = heldAT.EID"
+    "SELECT Date.DayNum, Day, Month, YEAR, vName, Ename, time FROM Date JOIN heldOn ON Date.DayNum = heldOn.DayNum JOIN event ON heldOn.EID = event.EID JOIN heldAt ON heldOn.EID = heldAT.EID"
     db.query(sqlSelect, (err, result)=>{
         res.send(result)
     })
@@ -96,13 +96,13 @@ app.get('/api/dates', (req, res)=>{
 app.get('/api/dates/:dayNum', (req, res)=>{
     const Dnum = req.params.dayNum
     const sqlSelect = 
-    "SELECT Date.DayNum, Day, Month, YEAR, vName, Ename FROM Date JOIN heldOn ON Date.DayNum = heldOn.DayNum JOIN event ON heldOn.EID = event.EID JOIN heldAt ON heldOn.EID = heldAT.EID WHERE Date.DayNum = ?"
+    "SELECT Date.DayNum, Day, Month, YEAR, vName, Ename, time FROM Date JOIN heldOn ON Date.DayNum = heldOn.DayNum JOIN event ON heldOn.EID = event.EID JOIN heldAt ON heldOn.EID = heldAT.EID WHERE Date.DayNum = ?"
     db.query(sqlSelect, Dnum, (err, result)=>{
         res.send(result)
     })
 })
 
-//port might differ, look for an unused port on your computer
-app.listen(3001, () =>{
-    console.log("running on port", 3001)
+const portNumber = 3001 //port might differ, look for an unused port on your computer
+app.listen(portNumber, () =>{
+    console.log("running on port", portNumber)
 })

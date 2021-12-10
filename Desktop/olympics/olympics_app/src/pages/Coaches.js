@@ -68,12 +68,12 @@ function Coaches(props) {
 
                     let b64, mimeType, defualtPic = true
 
-                    // if (coach.Photo.data.length > 10) {
-                    //     const buffer = coach.Photo.data
-                    //     b64 = new Buffer.from(buffer).toString('base64')
-                    //     mimeType = "png"
-                    //     defualtPic = false
-                    // }
+                    if (coach.Photo.data.length > 10) {
+                        const buffer = coach.Photo.data
+                        b64 = new Buffer.from(buffer).toString('base64')
+                        mimeType = "png"
+                        defualtPic = false
+                    }
 
                     return (
                         <Card sx={{ maxWidth: 500, maxHeight: 500 }} key={`${coach.CID}`}>

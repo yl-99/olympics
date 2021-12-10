@@ -52,6 +52,7 @@ function Dates(props) {
                         <TableRow>
                             <TableCell> Day Number </TableCell>
                             <TableCell align="right"> Date </TableCell>
+                            <TableCell align="right"> Time </TableCell>
                             <TableCell align="right"> Gold Medal Event </TableCell>
                             <TableCell align="right"> Venue </TableCell>
                         </TableRow>
@@ -65,6 +66,7 @@ function Dates(props) {
                                         {date.DayNum}
                                     </TableCell>
                                     <TableCell align="right">{date.Day}/{date.Month}/{date.YEAR}</TableCell>
+                                    <TableCell align="right"> {date.time} </TableCell>
                                     <TableCell align="right">{date.Ename}</TableCell>
                                     <TableCell align="right">{date.vName}</TableCell>
                                 </TableRow>

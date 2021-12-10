@@ -66,12 +66,12 @@ function Athletes(props) {
 
                     let b64, mimeType, defualtPic = true
 
-                    // if(athlete.Photo.data.length > 10){
-                    // const buffer = athlete.Photo.data
-                    //  b64 = new Buffer.from(buffer).toString('base64')
-                    //  mimeType = "png"
-                    //  defualtPic = false
-                    // }
+                    if(athlete.Photo.data.length > 10){
+                    const buffer = athlete.Photo.data
+                     b64 = new Buffer.from(buffer).toString('base64')
+                     mimeType = "png"
+                     defualtPic = false
+                    }
 
                     return (
                         <Card sx={{ maxWidth: 500, maxHeight: 500}} key={`${athlete.AID}`}>
